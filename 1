@@ -1,0 +1,41 @@
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QTextEdit, QVBoxLayout, QWidget, QFileDialog
+import sys
+
+class FileInputApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('File Input Example')
+        self.setGeometry(100, 100, 400, 300)
+
+        layout = QVBoxLayout()
+
+        self.text_edit = QTextEdit()
+        layout.addWidget(self.text_edit)
+
+        open_button = QPushButton('Open File')
+        open_button.clicked.connect(self.open_file)
+        layout.addWidget(open_button)
+
+        central_widget = QWidget()
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
+
+    def open_file(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.ReadOnly
+        file_path, _ = QFileDialog.getOpenFileName(self, 'Open File', '', 'Text Files (*.txt);;All Files (*)', options=options)
+
+        if file_path:
+            with open(file_path, 'r') as file:
+                content = file.read()
+                self.text_edit.setPlainText(content)
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    file_input_app = FileInputApp()
+    file_input_app.show()
+    sys.exit(app.exec())
